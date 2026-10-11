@@ -1,3 +1,4 @@
+[Uploading PART5_ARCHITECTURE_REVIEW.md…]()
 # Lily — Part 5: Architecture, Compatibility, Resource & Error-Handling Review
 
 Evidence labels used everywhere in these documents:
@@ -15,6 +16,7 @@ The existing structure was kept (no rewrite). The conceptual layout maps onto th
 ```
 Lily
 ├── Core            lily_paths.py (paths) · lily_config.py (settings) · safe_json.py (atomic/recoverable files)
+│                   lily_log.py (file logging, crash capture) · lily_version.py (the version)
 │                   lily_runtime.py (process_text: the decision pipeline) · state_manager.py
 ├── Brain           core/local_engine.py (llama.cpp process) · prompt_manager.py (prompt + token budget)
 │                   identity.py (names, identity answers, output guard) · conversation_manager.py
@@ -25,7 +27,8 @@ Lily
 │                   safety.py (tiers + the single confirmation gate) · system_actions.py · system_tools.py
 │                   extra_commands.py · tool_registry.py + 23 Lily tools · actions/ (16) · plugins/
 ├── Interface       Lily.py (CLI/--selftest) · lily_gui.py + ui.py (PyQt5 HUD) · lily_dispatch.py · dashboard/
-└── Diagnostics     selftest.py · tests/ (164 tests in 9 modules) · tools/check_py38.py · mic_level_test.py · test_microphone.py
+└── Diagnostics     selftest.py · lily_status.py (--status) · tests/ (218 tests in 10 modules) · tools/check_py38.py
+                    mic_level_test.py · test_microphone.py
 ```
 
 Message flow (unchanged in shape, hardened in every stage):
