@@ -1,3 +1,4 @@
+[Uploading WINDOWS7_TEST_PROCEDURE.md…]()
 # Windows 7 test procedure
 
 Do these in order on the real machine. Each step says what you should see. Copy any unexpected output (the text, not a description) and send it back — that is how the remaining items get closed. Steps marked **(WIN7)** are the ones nobody has verified yet.
@@ -11,6 +12,12 @@ Open a Command Prompt in the Lily folder: `cd /d C:\path\to\Lily-MARK-LIV-Local-
 
 **3. Run the self-test without the model** — `py Lily.py --selftest --quick`
 Expect: no `[FAIL]`. `[WARNING]` for anything not installed is normal. If `[FAIL] Local model` appears, the paths in `config\local_settings.json` are wrong (the message says which).
+
+**3a. Version and status (new in 1.1.0)** — `py Lily.py --version` → first line `Lily 1.1.0`. Then `py Lily.py --status` → a short report (Overall, Session, Model, Voice, Tools, Memory, Log). With Lily not running, Session should say it is not running. It must finish in a few seconds and must not change anything.
+
+**3b. Log file (WIN7)** — run `py Lily.py --console`, type `who are you`, then `quit`. Then `type logs\lily.log`. Expect lines like `2026-… | INFO     | lily.main | MainThread | Lily 1.1.0 starting (mode=console)` and `… Lily stopped (mode=console)`. Open the file in Notepad and confirm it is readable. Note: your messages are deliberately NOT in the log.
+
+**3c. Uptime and crash detection (WIN7)** — start `run_lily.bat`; from a second Command Prompt run `py Lily.py --status` → Session should say `running (gui), PID …, uptime …`. Close Lily normally → `--status` says the last session ended normally. Start it again, then end it from Task Manager (End Process) → `--status` should say the last session **did not shut down cleanly**. Also type `status` inside Lily and confirm the same report appears.
 
 **4. Real llama.cpp (WIN7)** — `py Lily.py --selftest` (full).
 Expect `[PASS] Local model - answered in …s`. If it says `[FAIL] … engine error`, send the whole line: the exit code and last stderr lines are included. If the reply is empty or contains menu text, try setting `"no_conversation_flag": "off"` (or `"on"`) in `config\local_settings.json` and repeat. Note the seconds-per-reply.
@@ -30,8 +37,8 @@ Expect `[PASS] Local model - answered in …s`. If it says `[FAIL] … engine er
 
 **11. Desktop commands (WIN7)** — `list processes`; open Notepad then `close notepad` → confirm → it closes (or asks you to save first, because Lily never force-closes unless you say "force close"); `open example.com` opens the browser.
 
-**12. Run the automated suite** — `run_tests.bat`. Most tests use fakes and should pass; send the end of the output if any fail. Failures on Windows can be either a real problem or a test that assumed Linux; either way I need the text.
+**12. Run the automated suite** — `run_tests.bat` (218 tests). Most tests use fakes and should pass; send the end of the output if any fail. Failures on Windows can be either a real problem or a test that assumed Linux; either way I need the text.
 
 **13. Shutdown hygiene** — after closing Lily, open Task Manager → no `llama-cli.exe` or `python.exe` left running.
 
-What to send back: the full output of steps 3–5, any WARNING/FAIL lines from 6–7, the CPU numbers from 9, and anything unexpected.
+What to send back: the output of steps 3a–3c (including `logs\lily.log` if anything looks wrong), the full output of steps 3–5, any WARNING/FAIL lines from 6–7, the CPU numbers from 9, and anything unexpected.
