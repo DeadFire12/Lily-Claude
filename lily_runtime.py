@@ -3155,7 +3155,8 @@ def process_text(user_text, origin="local"):
         response_instructions += """
     RESPONSE MODE: SIMPLE
     
-    Answer the user in simple everyday English.
+        Answer the user in simple, clear language.
+        Use the same language as the user's latest message.
     
     Rules:
     - Explain the main idea first.
@@ -3274,6 +3275,10 @@ def process_text(user_text, origin="local"):
     - Do not repeat the user's question unnecessarily.
     - Do not invent facts.
     - If you are unsure about something, say so.
+    - Reply in the same language as the user's latest message,
+        unless the user explicitly requests another language.
+    - If the user speaks Persian/Farsi, answer naturally in Persian.
+        Do not switch to English just because earlier instructions are in English.
     """
     
     
